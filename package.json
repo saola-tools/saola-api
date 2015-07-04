@@ -1,6 +1,6 @@
 {
   "name": "devebot-api",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Devebot API",
   "main": "index.js",
   "scripts": {
@@ -11,12 +11,17 @@
     "url": "git+https://github.com/devebot/devebot-api.git"
   },
   "keywords": [
-    "devebot"
+    "devebot", "api"
   ],
   "author": "Hung Pham <pnhung177@acegik.net> (http://acegik.net/blog)",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/devebot/devebot-api/issues"
   },
-  "homepage": "https://github.com/devebot/devebot-api#readme"
+  "homepage": "https://github.com/devebot/devebot-api#readme",
+  "devDependencies": {
+    "chai": "^3.4.1",
+    "mocha": "^2.3.4",
+    "sinon": "^1.17.2"
+  }
 }
