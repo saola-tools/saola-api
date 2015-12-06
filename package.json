@@ -1,6 +1,6 @@
 {
   "name": "devebot-api",
-  "version": "0.0.2",
+  "version": "0.0.4",
   "description": "Devebot API",
   "main": "index.js",
   "scripts": {
@@ -11,7 +11,8 @@
     "url": "git+https://github.com/devebot/devebot-api.git"
   },
   "keywords": [
-    "devebot", "api"
+    "devebot",
+    "api"
   ],
   "author": "Hung Pham <pnhung177@acegik.net> (http://acegik.net/blog)",
   "license": "ISC",
@@ -23,5 +24,9 @@
     "chai": "^3.4.1",
     "mocha": "^2.3.4",
     "sinon": "^1.17.2"
+  },
+  "dependencies": {
+    "superagent": "^1.6.1",
+    "ws": "^0.8.1"
   }
 }
