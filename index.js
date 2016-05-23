@@ -2,7 +2,6 @@
 
 var events = require('events');
 var util = require('util');
-var superagent = require('superagent');
 var WebSocket = require('ws');
 
 function Client(params) {
@@ -16,39 +15,9 @@ function Client(params) {
   var self = this;
   
   self.loadDefinition = function(callback) {
-    logger.debug(' * load commandline definition with cfg: %s', JSON.stringify(config, null, 2));
-    
-    var url = util.format('http://%s:%s%s/clidef', config.host, config.port, config.path);
-  
-    logger.debug(' + send a get request to [%s] to get commandline definition', url);
-    
-    superagent.get(url)
-    .set('user-agent', 'devebot/api')
-    .type('application/json')
-    .accept('application/json')
-    .end(function(err, res) {
-      if (err) {
-        logger.debug(' -> failure on requesting commandline definition: %s', JSON.stringify(err, null, 2));
-        callback({
-          name: 'restapi_request_error',
-          error: err
-        });
-        return;
-      } else if (res.status != 200) {
-        logger.debug(' -> invalide status on requesting commandline definition: %s', res.status);
-        callback({
-          name: 'restapi_invalid_status',
-          status: res.status
-        });
-        return;
-      } else {
-        var result = res.body;
-        logger.debug(' -> success on requesting commandline definition: %s', JSON.stringify(result, null, 2));
-        callback(null, result);
-      }
-    });
+    self.execCommand({ name: 'definition', options: [] }, callback);
   };
-  
+
   self.execCommand = function(command, callback) {
     var wsUrl = util.format('ws://%s:%s%s/execute', config.host, config.port, config.path);
     var ws = new WebSocket(wsUrl);
@@ -68,6 +37,11 @@ function Client(params) {
       
       data = JSON.parse(data);
       switch(data.state) {
+        case 'definition':
+          ws.close();
+          self.emit('definition', data);
+          callback && callback(null, data.value);
+          break;
         case 'enqueque':
           self.emit('started');
           break;

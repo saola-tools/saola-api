@@ -1,6 +1,6 @@
 {
   "name": "devebot-api",
-  "version": "0.0.4",
+  "version": "0.1.4",
   "description": "Devebot API",
   "main": "index.js",
   "scripts": {
@@ -26,7 +26,6 @@
     "sinon": "^1.17.2"
   },
   "dependencies": {
-    "superagent": "^1.6.1",
     "ws": "^0.8.1"
   }
 }
