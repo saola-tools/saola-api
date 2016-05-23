@@ -19,8 +19,7 @@ function Client(params) {
   };
 
   self.execCommand = function(command, callback) {
-    var wsUrl = util.format('ws://%s:%s%s/execute', config.host, config.port, config.path);
-    var ws = new WebSocket(wsUrl);
+    var ws = buildWebsocketClient(config);
 
     var wsCommand = {
       command: command.name,
@@ -85,6 +84,14 @@ function Client(params) {
 util.inherits(Client, events.EventEmitter);
 
 module.exports = Client;
+
+var buildWebsocketClient = function(config) {
+  var sslEnabled = (config.ssl && typeof(config.ssl) == 'object' && config.ssl.enabled);
+  var wsUrl = util.format('%s://%s:%s%s/execute',
+    sslEnabled?'wss':'ws', config.host, config.port, config.path);
+  var wsOpts = sslEnabled ? {rejectUnauthorized: config.ssl.rejectUnauthorized || false} : {};
+  return new WebSocket(wsUrl, null, wsOpts);
+};
 
 var emptyFunction = function() {};
 
