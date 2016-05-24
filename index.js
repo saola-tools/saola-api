@@ -72,10 +72,12 @@ function Client(params) {
     });
     
     ws.on('close', function handler(code, message) {
+      self.emit('close', code, message);
       logger.debug(' - Websocket@client is closed, code: %s, message: %s', code, message);
     });
     
     ws.on('error', function handler(error) {
+      self.emit('error', error);
       logger.debug(' - Websocket@client encounter an error: %s', error);
     });
   };
@@ -86,10 +88,27 @@ util.inherits(Client, events.EventEmitter);
 module.exports = Client;
 
 var buildWebsocketClient = function(config) {
-  var sslEnabled = (config.ssl && typeof(config.ssl) == 'object' && config.ssl.enabled);
+  var wsOpts = {};
+
+  if (config.authen instanceof Object) {
+    wsOpts.headers = wsOpts.headers || {};
+    if (config.authen.token_jwt) {
+      wsOpts.headers["Authorization"] = "JWT " + config.authen.token_jwt;
+    }
+    if (config.authen.token_key && config.authen.token_secret) {
+      wsOpts.headers["X-Token-Key"] = config.authen.token_key;
+      wsOpts.headers["X-Token-Secret"] = config.authen.token_secret;
+    }
+  }
+
+  var sslEnabled = (config.tunnel instanceof Object && config.tunnel.enabled);
+  if (sslEnabled) {
+    wsOpts.rejectUnauthorized = config.tunnel.rejectUnauthorized || false;
+  }
+
   var wsUrl = util.format('%s://%s:%s%s/execute',
     sslEnabled?'wss':'ws', config.host, config.port, config.path);
-  var wsOpts = sslEnabled ? {rejectUnauthorized: config.ssl.rejectUnauthorized || false} : {};
+
   return new WebSocket(wsUrl, null, wsOpts);
 };
 
