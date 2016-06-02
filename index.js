@@ -42,7 +42,7 @@ function Client(params) {
           callback && callback(null, data.value);
           break;
         case 'enqueque':
-          self.emit('started');
+          self.emit('started', data);
           break;
         case 'progress':
           self.emit('progress', data);
@@ -55,12 +55,12 @@ function Client(params) {
           break;
         case 'done':
           ws.close();
-          self.emit('done');
+          self.emit('done', data);
           callback && callback();
           break;
         case 'noop':
           ws.close();
-          self.emit('noop');
+          self.emit('noop', data);
           callback && callback({
             name: 'IS_NOT_IMPLEMENTED',
             message: 'operation is not implemented'
