@@ -35,6 +35,9 @@ function Client(params) {
       logger.debug(' - Websocket@client is received a message data: %s', data);
       
       data = JSON.parse(data);
+
+      data.command = data.command || command;
+
       switch(data.state) {
         case 'definition':
           ws.close();
