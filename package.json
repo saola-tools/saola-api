@@ -4,7 +4,7 @@
   "description": "Devebot API",
   "main": "index.js",
   "scripts": {
-    "test": "mocha test/*-test.js"
+    "test": "node_modules/.bin/mocha test/tdd/*-test.js"
   },
   "repository": {
     "type": "git",
@@ -21,8 +21,8 @@
   },
   "homepage": "https://github.com/devebot/devebot-api#readme",
   "devDependencies": {
-    "chai": "^3.4.1",
-    "mocha": "^2.3.4",
+    "chai": "^4.1.2",
+    "mocha": "^3.5.3",
     "sinon": "^1.17.2"
   },
   "dependencies": {

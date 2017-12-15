@@ -3,13 +3,15 @@
 var events = require('events');
 var util = require('util');
 var WebSocket = require('ws');
+var misc = require('./misc');
 
 function Client(params) {
-  Client.super_.apply(this);
-  
+  events.EventEmitter.call(this);
+
   params = params || {};
   
   var config = params;
+  var stateMap = params.stateMap || misc.STATE_MAP;
   var logger = params.logger || emptyLogger;
   
   var self = this;
@@ -19,7 +21,7 @@ function Client(params) {
   };
 
   self.execCommand = function(command, callback) {
-    var ws = buildWebsocketClient(config);
+    var ws = params.ws ? params.ws : buildWebsocketClient(config);
 
     var wsCommand = {
       command: command.name,
@@ -41,29 +43,29 @@ function Client(params) {
       switch(data.state) {
         case 'definition':
           ws.close();
-          self.emit('definition', data);
+          self.emit(stateMap[data.state], data);
           callback && callback(null, data.value);
           break;
         case 'enqueque':
-          self.emit('started', data);
+          self.emit(stateMap[data.state], data);
           break;
         case 'progress':
-          self.emit('progress', data);
+          self.emit(stateMap[data.state], data);
           break;
         case 'failed':
-          self.emit('failure', data);
+          self.emit(stateMap[data.state], data);
           break;
         case 'complete':
-          self.emit('success', data);
+          self.emit(stateMap[data.state], data);
           break;
         case 'done':
           ws.close();
-          self.emit('done', data);
+          self.emit(stateMap[data.state], data);
           callback && callback();
           break;
         case 'noop':
           ws.close();
-          self.emit('noop', data);
+          self.emit(stateMap[data.state], data);
           callback && callback({
             name: 'IS_NOT_IMPLEMENTED',
             message: 'operation is not implemented'
@@ -83,6 +85,8 @@ function Client(params) {
       self.emit('error', error);
       logger.debug(' - Websocket@client encounter an error: %s', error);
     });
+
+    (typeof(ws.ready) === 'function') && ws.ready();
   };
 }
 
@@ -118,7 +122,10 @@ var buildWebsocketClient = function(config) {
 var emptyFunction = function() {};
 
 var emptyLogger = {
-  debug: emptyFunction,
   trace: emptyFunction,
-  error: emptyFunction
+  debug: emptyFunction,
+  info: emptyFunction,
+  warn: emptyFunction,
+  error: emptyFunction,
+  fatal: emptyFunction
 };
