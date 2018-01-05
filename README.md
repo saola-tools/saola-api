@@ -29,12 +29,12 @@ devebot.on('started', function() {
   logger.info(' - The command is started');
 });
 
-devebot.on('success', function(data) {
+devebot.on('completed', function(data) {
   logger.info(' - The command is commpleted successful, result: %s',
       JSON.stringify(data, null, 2));
 });
 
-devebot.on('failure', function(data) {
+devebot.on('failed', function(data) {
   logger.info(' - The command is failed, output: %s',
       JSON.stringify(data, null, 2));
 });

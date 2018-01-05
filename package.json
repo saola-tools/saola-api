@@ -1,6 +1,6 @@
 {
   "name": "devebot-api",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Devebot API",
   "main": "index.js",
   "scripts": {
@@ -14,8 +14,8 @@
     "devebot",
     "api"
   ],
-  "author": "Hung Pham <pnhung177@acegik.net> (http://acegik.net/blog)",
-  "license": "ISC",
+  "author": "Hung Pham <pnhung177@acegik.net>",
+  "license": "GPL-3.0",
   "bugs": {
     "url": "https://github.com/devebot/devebot-api/issues"
   },

@@ -11,9 +11,13 @@ function Client(params) {
   params = params || {};
   
   var config = params;
+  var logger = params.logger || misc.emptyLogger;
+
   var stateMap = params.stateMap || misc.STATE_MAP;
-  var logger = params.logger || emptyLogger;
-  
+  var mapState = function(state) {
+    return stateMap[state] || state;
+  }
+
   var self = this;
   
   self.loadDefinition = function(callback) {
@@ -24,8 +28,12 @@ function Client(params) {
     var ws = params.ws ? params.ws : buildWebsocketClient(config);
 
     var wsCommand = {
+      name: command.name,
+      options: command.options,
+      payload: command.payload,
+      package: command.package,
       command: command.name,
-      options: command.options
+      data: command.data
     };
     
     ws.on('open', function open() {
@@ -43,46 +51,44 @@ function Client(params) {
       switch(data.state) {
         case 'definition':
           ws.close();
-          self.emit(stateMap[data.state], data);
+          self.emit(mapState(data.state), data);
           callback && callback(null, data.value);
           break;
-        case 'enqueque':
-          self.emit(stateMap[data.state], data);
-          break;
-        case 'progress':
-          self.emit(stateMap[data.state], data);
-          break;
+        case 'started':
+        case 'completed':
+        case 'cancelled':
         case 'failed':
-          self.emit(stateMap[data.state], data);
-          break;
-        case 'complete':
-          self.emit(stateMap[data.state], data);
+        case 'timeout':
+          self.emit(mapState(data.state), data);
           break;
         case 'done':
           ws.close();
-          self.emit(stateMap[data.state], data);
+          self.emit(mapState(data.state), data);
           callback && callback();
           break;
         case 'noop':
           ws.close();
-          self.emit(stateMap[data.state], data);
+          self.emit(mapState(data.state), data);
           callback && callback({
             name: 'IS_NOT_IMPLEMENTED',
             message: 'operation is not implemented'
           });
           break;
         default:
+          if (stateMap[data.state]) {
+            self.emit(stateMap[data.state], data);
+          }
           break;
       }
     });
     
     ws.on('close', function handler(code, message) {
-      self.emit('close', code, message);
+      self.emit(mapState('close'), code, message);
       logger.debug(' - Websocket@client is closed, code: %s, message: %s', code, message);
     });
     
     ws.on('error', function handler(error) {
-      self.emit('error', error);
+      self.emit(mapState('error'), error);
       logger.debug(' - Websocket@client encounter an error: %s', error);
     });
 
@@ -117,15 +123,4 @@ var buildWebsocketClient = function(config) {
     sslEnabled?'wss':'ws', config.host, config.port, config.path);
 
   return new WebSocket(wsUrl, null, wsOpts);
-};
-
-var emptyFunction = function() {};
-
-var emptyLogger = {
-  trace: emptyFunction,
-  debug: emptyFunction,
-  info: emptyFunction,
-  warn: emptyFunction,
-  error: emptyFunction,
-  fatal: emptyFunction
 };
