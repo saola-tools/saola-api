@@ -19,7 +19,7 @@ function Client(params) {
   }
 
   var self = this;
-  
+
   self.loadDefinition = function(callback) {
     self.execCommand({ name: 'definition', options: [] }, callback);
   };
@@ -29,6 +29,7 @@ function Client(params) {
 
     var wsCommand = {
       name: command.name,
+      mode: command.mode,
       options: command.options,
       payload: command.payload,
       package: command.package,
