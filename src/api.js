@@ -9,13 +9,14 @@ function Client(params) {
   events.EventEmitter.call(this);
 
   params = params || {};
-  var config = params;
 
-  var logger = config.logger || misc.emptyLogger;
-  var stateMap = config.stateMap || misc.STATE_MAP;
+  var config = extractConnectionOpts(params);
+  var logger = params.logger || misc.emptyLogger;
+  var stateMap = params.stateMap || misc.STATE_MAP;
   var mapState = function(state) {
     return stateMap[state] || state;
   }
+  let listener = params.listener || params.ws;
 
   var self = this;
 
@@ -24,7 +25,7 @@ function Client(params) {
   };
 
   self.execCommand = function(command, callback) {
-    var ws = params.ws ? params.ws : buildWebsocketClient(config);
+    var ws = listener ? listener : buildWebsocketClient(config);
 
     var wsCommand = {
       name: command.name,
@@ -99,6 +100,13 @@ function Client(params) {
 util.inherits(Client, events.EventEmitter);
 
 module.exports = Client;
+
+var extractConnectionOpts = function(params) {
+  params = params || {};
+  return misc.pick(params.connection || params, [
+    'url', 'host', 'port', 'path', 'authen', 'tunnel'
+  ]);
+}
 
 var buildWebsocketClient = function(config) {
   var wsOpts = {};
