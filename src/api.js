@@ -3,7 +3,7 @@
 var events = require('events');
 var util = require('util');
 var WebSocket = require('ws');
-var misc = require('./misc');
+var chores = require('./chores');
 
 function Client(params) {
   events.EventEmitter.call(this);
@@ -11,8 +11,8 @@ function Client(params) {
   params = params || {};
 
   var config = extractConnectionOpts(params);
-  var logger = params.logger || misc.getDefaultLogger();
-  var stateMap = params.stateMap || misc.STATE_MAP;
+  var logger = params.logger || chores.getDefaultLogger();
+  var stateMap = params.stateMap || chores.STATE_MAP;
   var mapState = function(state) {
     return stateMap[state] || state;
   }
@@ -103,7 +103,7 @@ module.exports = Client;
 
 var extractConnectionOpts = function(params) {
   params = params || {};
-  return misc.pick(params.connection || params, [
+  return chores.pick(params.connection || params, [
     'url', 'host', 'port', 'path', 'authen', 'tunnel'
   ]);
 }

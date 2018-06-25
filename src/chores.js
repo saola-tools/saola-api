@@ -1,15 +1,21 @@
 'use strict';
 
-const emptyFunction = function() {};
+const pinbug = require('./pinbug');
 
-const emptyLogger = {
-  trace: emptyFunction,
-  debug: emptyFunction,
-  info: emptyFunction,
-  warn: emptyFunction,
-  error: emptyFunction,
-  fatal: emptyFunction
-}
+const pinbugScope = 'devebot-api:';
+const loggingLevels = ['trace', 'debug', 'info', 'warn', 'error', 'fatal'];
+
+const pinbugWrapper = {};
+loggingLevels.forEach(function(level) {
+  pinbugWrapper[level] = pinbug(pinbugScope + level);
+});
+
+const defaultLogger = {};
+loggingLevels.forEach(function(level) {
+  defaultLogger[level] = function() {
+    pinbugWrapper[level].enabled && pinbugWrapper[level].apply(null, arguments);
+  }
+});
 
 const STATE_MAP = {
   "definition": "definition",
@@ -43,7 +49,7 @@ function Chores() {
   }
 
   this.getDefaultLogger = function() {
-    return emptyLogger;
+    return defaultLogger;
   }
 
   this.STATE_MAP = STATE_MAP;
