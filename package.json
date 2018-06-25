@@ -1,10 +1,23 @@
 {
   "name": "devebot-api",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Devebot API",
   "main": "index.js",
+  "directories": {
+    "lib": "lib/"
+  },
+  "files": [
+    "bin/",
+    "data/",
+    "lib/"
+  ],
   "scripts": {
-    "test": "node_modules/.bin/mocha test/tdd/*-test.js"
+    "build": "babel ./src -d ./lib",
+    "clean": "rm -rf ./lib",
+    "prepublish": "npm run clean && NODE_ENV=${DEVEBOT_NODE_ENV:-production} npm run build",
+    "pretest": "npm run clean && NODE_ENV=${DEVEBOT_NODE_ENV:-test} npm run build",
+    "test": "mocha --recursive ./test/**/*-test.js",
+    "verify": "npm run prepublish && mocha --recursive ./test/**/*-test.js"
   },
   "repository": {
     "type": "git",
@@ -14,16 +27,21 @@
     "devebot",
     "api"
   ],
-  "author": "Hung Pham <pnhung177@acegik.net>",
-  "license": "GPL-3.0",
+  "author": {
+    "name": "Devebot",
+    "email": "contact@devebot.com",
+    "url": "https://github.com/devebot"
+  },
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/devebot/devebot-api/issues"
   },
   "homepage": "https://github.com/devebot/devebot-api#readme",
   "devDependencies": {
-    "chai": "^4.1.2",
-    "mocha": "^3.5.3",
-    "sinon": "^1.17.2"
+    "babel-cli": "^6.26.0",
+    "babel-plugin-minify-mangle-names": "^0.3.0",
+    "babel-plugin-transform-async-to-module-method": "^6.24.1",
+    "babel-preset-env": "^1.6.1"
   },
   "dependencies": {
     "ws": "^3.3.2"
