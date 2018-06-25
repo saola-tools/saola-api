@@ -42,7 +42,10 @@ function Chores() {
     return target;
   }
 
-  this.emptyLogger = emptyLogger;
+  this.getDefaultLogger = function() {
+    return emptyLogger;
+  }
+
   this.STATE_MAP = STATE_MAP;
 }
 

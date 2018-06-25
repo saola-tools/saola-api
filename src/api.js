@@ -11,7 +11,7 @@ function Client(params) {
   params = params || {};
 
   var config = extractConnectionOpts(params);
-  var logger = params.logger || misc.emptyLogger;
+  var logger = params.logger || misc.getDefaultLogger();
   var stateMap = params.stateMap || misc.STATE_MAP;
   var mapState = function(state) {
     return stateMap[state] || state;
