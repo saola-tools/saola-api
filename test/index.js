@@ -5,6 +5,8 @@ var Runner = rewire('devebot/lib/runner');
 var WsServerMock = Runner.__get__("WsServerMock");
 var WsClientMock = Runner.__get__("WsClientMock");
 var WebSocket = require('ws');
+var assert = require('chai').assert;
+var util = require('util');
 var chores = require('../lib/chores');
 
 function TestLoader() {
@@ -20,13 +22,46 @@ function TestLoader() {
     return new WsServerMock();
   }
 
-  this.createWsClientMock = function(ws) {
-    return ws.register(new WsClientMock(ws));
+  this.createWsClientMock = function(wsServer) {
+    var wsClient = new WsClientMock(wsServer);
+    wsServer.on('message', function(command) {
+      command = JSON.parse(command);
+      switch(command.name) {
+        case 'definition': {
+          wsClient.emit('message', JSON.stringify({
+            state: 'definition',
+            value: []
+          }));
+        }
+        break;
+        case 'example':
+        var options = command.options || {};
+        var result = options.expectedData || {};
+        result.state = options.expected;
+        wsClient.emit('message', JSON.stringify(result));
+        if (['completed', 'failed', 'cancelled', 'timeout'].indexOf(options.expected) >= 0) {
+          wsClient.emit('message', JSON.stringify({
+            state: 'done'
+          }));
+        }
+        break;
+      }
+    });
+    return wsServer.register(wsClient);
   }
 
   this.createWebSocketServer = function(opts) {
     opts = opts || {};
     return new WebSocket.Server(opts);
+  }
+
+  this.rejectEvents = function(emitter, rejectedEvents) {
+    rejectedEvents = rejectedEvents || [];
+    rejectedEvents.forEach(function(eventName) {
+      emitter.addListener(eventName, function(data) {
+        assert.isTrue(false, util.format('[%s] must not be emitted', eventName));
+      })
+    });
   }
 }
 
