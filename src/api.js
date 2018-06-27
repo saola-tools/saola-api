@@ -17,6 +17,7 @@ function Client(params) {
     return stateMap[state] || state;
   }
   let listener = params.listener || params.ws;
+  listener = (listener instanceof events.EventEmitter) ? listener : undefined;
 
   let self = this;
 

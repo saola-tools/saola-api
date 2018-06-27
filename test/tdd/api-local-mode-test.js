@@ -15,11 +15,8 @@ describe("tdd:devebot-api:local", function() {
   this.timeout(lab.getDefaultTimeout());
 
   describe("execCommand()", function() {
-    let api;
-
-    let wsClient;
-    let clientStub;
-    let clientMethods = ['on', 'ready', 'send'];
+    var api, wsClient, clientStub;
+    var clientMethods = ['on', 'ready', 'send'];
 
     beforeEach(function() {
       wsClient = lab.createWsClientMock(lab.createWsServerMock());
@@ -75,6 +72,99 @@ describe("tdd:devebot-api:local", function() {
             assert.deepInclude(data, {
               state: 'completed',
               msg: 'completed'
+            });
+          })
+          .on("close", onResolved)
+          .on("error", onRejected)
+          .execCommand(command);
+      }).then(chores.ary(done, 0)).catch(done);
+    });
+
+    it("invoke execCommand() with state 'failed' successfully", function(done) {
+      new Promise(function(onResolved, onRejected) {
+        var command = {
+          name: 'example',
+          options: {
+            expected: 'failed',
+            expectedData: { msg: 'failed' }
+          }
+        };
+        api
+          .on("failed", function(data) {
+            assert.deepInclude(data, {
+              state: 'failed',
+              msg: 'failed'
+            });
+          })
+          .on("close", onResolved)
+          .on("error", onRejected)
+          .execCommand(command);
+      }).then(chores.ary(done, 0)).catch(done);
+    });
+
+    it("invoke execCommand() with state 'cancelled' successfully", function(done) {
+      new Promise(function(onResolved, onRejected) {
+        var command = {
+          name: 'example',
+          options: {
+            expected: 'cancelled',
+            expectedData: { msg: 'cancelled' }
+          }
+        };
+        api
+          .on("cancelled", function(data) {
+            assert.deepInclude(data, {
+              state: 'cancelled',
+              msg: 'cancelled'
+            });
+          })
+          .on("close", onResolved)
+          .on("error", onRejected)
+          .execCommand(command);
+      }).then(chores.ary(done, 0)).catch(done);
+    });
+
+    it("invoke execCommand() with state 'timeout' successfully", function(done) {
+      new Promise(function(onResolved, onRejected) {
+        var command = {
+          name: 'example',
+          options: {
+            expected: 'timeout',
+            expectedData: { msg: 'timeout' }
+          }
+        };
+        api
+          .on("timeout", function(data) {
+            assert.deepInclude(data, {
+              state: 'timeout',
+              msg: 'timeout'
+            });
+          })
+          .on("close", onResolved)
+          .on("error", onRejected)
+          .execCommand(command);
+      }).then(chores.ary(done, 0)).catch(done);
+    });
+
+    it("invoke loadDefinition() successfully", function(done) {
+      new Promise(function(onResolved, onRejected) {
+        var command = {
+          name: 'definition',
+          options: {
+            expected: 'definition',
+            expectedData: [
+              {
+                name: 'example',
+                options: []
+              }
+            ]
+          }
+        };
+        api
+          .on("definition", function(data) {
+            assert.deepInclude(data, {
+              state: 'definition',
+              value: command.options.expectedData
             });
           })
           .on("close", onResolved)

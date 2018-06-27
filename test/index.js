@@ -26,17 +26,17 @@ function TestLoader() {
     var wsClient = new WsClientMock(wsServer);
     wsServer.on('message', function(command) {
       command = JSON.parse(command);
+      var options = command.options || {};
+      var result = options.expectedData || {};
       switch(command.name) {
         case 'definition': {
           wsClient.emit('message', JSON.stringify({
             state: 'definition',
-            value: []
+            value: result
           }));
         }
         break;
         case 'example':
-        var options = command.options || {};
-        var result = options.expectedData || {};
         result.state = options.expected;
         wsClient.emit('message', JSON.stringify(result));
         if (['completed', 'failed', 'cancelled', 'timeout'].indexOf(options.expected) >= 0) {
