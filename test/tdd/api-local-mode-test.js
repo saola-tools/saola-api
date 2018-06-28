@@ -38,6 +38,7 @@ describe("tdd:devebot-api:local", function() {
         lab.rejectEvents(api, ['failed', 'cancelled', 'timeout', 'started']);
         api
           .on("noop", function(data) {
+            false && console.log("Command[%s] result: %s", command.name, JSON.stringify(data, null, 2));
             assert.deepInclude(data, {
               state: 'noop'
             });
