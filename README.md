@@ -1,13 +1,13 @@
-# devebot-api
+# @saola/api
 
-> The devebot application programming interface.
+> The Saola application programming interface.
 
 ## Install
 
-Installs this library and you'll have access to the `devebot` service from your program.
+Installs this library and you'll have access to the `saola` service from your program.
 
 ```shell
-npm install --save devebot-api
+npm install --save @saola/api
 ```
 
 ## Usage
@@ -15,13 +15,13 @@ npm install --save devebot-api
 ### Creates object and defines events
 
 ```javascript
-var ApiClient = require('devebot-api');
+var ApiClient = require('@saola/api');
 var logger = require('winston');
 
 var apiClient = new ApiClient({
   host: '<your-address-default-127.0.0.1>',
   port: '<your-port-default-17779>',
-  path: '<default-devebot>',
+  path: '<default-saola>',
   logger: logger // option
 });
 
@@ -50,7 +50,7 @@ apiClient.on('noop', function() {
 
 ### Gets commands definition
 
-Uses `apiClient.loadDefinition(callback)` to get the commands defintion from `devebot` service.
+Uses `apiClient.loadDefinition(callback)` to get the commands defintion from `saola` service.
 
 ```javascript
 apiClient.loadDefinition(function(err, definition) {
@@ -60,7 +60,7 @@ apiClient.loadDefinition(function(err, definition) {
 
 ### Executes a command
 
-Uses `apiClient.execCommand(cmd_definition, callback)` to execute a command that has been defined in `devebot` service.
+Uses `apiClient.execCommand(cmd_definition, callback)` to execute a command that has been defined in `saola` service.
 
 Example:
 

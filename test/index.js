@@ -1,7 +1,7 @@
 'use strict';
 
 var rewire = require('rewire');
-var Runner = rewire('devebot/lib/runner');
+var Runner = rewire('@saola/core/lib/runner');
 var WsServerMock = Runner.__get__("WsServerMock");
 var WsClientMock = Runner.__get__("WsClientMock");
 var WebSocket = require('ws');

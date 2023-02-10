@@ -1,7 +1,7 @@
 {
-  "name": "devebot-api",
+  "name": "@saola/api",
   "version": "0.4.0",
-  "description": "Devebot API",
+  "description": "SaolaJS API",
   "main": "index.js",
   "directories": {
     "lib": "lib/"
@@ -27,22 +27,22 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/devebot/devebot-api.git"
+    "url": "git+https://github.com/saolajs/saola-api.git"
   },
   "keywords": [
-    "devebot",
+    "saola",
     "api"
   ],
   "author": {
-    "name": "Devebot",
-    "email": "contact@devebot.com",
-    "url": "https://github.com/devebot"
+    "name": "SaolaJS",
+    "email": "contact@saolajs.com",
+    "url": "https://github.com/saolajs"
   },
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/devebot/devebot-api/issues"
+    "url": "https://github.com/saolajs/saola-api/issues"
   },
-  "homepage": "https://github.com/devebot/devebot-api#readme",
+  "homepage": "https://github.com/saolajs/saola-api#readme",
   "devDependencies": {
     "@babel/cli": "^7.19.3",
     "@babel/core": "^7.20.2",
@@ -59,6 +59,6 @@
     "eslint-plugin-standard": "^4.0.0"
   },
   "dependencies": {
-    "ws": "^3.3.2"
+    "ws": "^3.3.3"
   }
 }
