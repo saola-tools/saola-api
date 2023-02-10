@@ -2,7 +2,7 @@
 
 const pinbug = require('./pinbug');
 
-const pinbugScope = 'devebot-api:';
+const pinbugScope = 'framework:api:';
 const loggingLevels = ['trace', 'debug', 'info', 'warn', 'error', 'fatal'];
 
 const pinbugWrapper = {};
@@ -31,7 +31,7 @@ function Chores() {
   this.isArray = function(a) {
     return a instanceof Array;
   }
-  
+
   this.isString = function(s) {
     return typeof(s) === 'string';
   }

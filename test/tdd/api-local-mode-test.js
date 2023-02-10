@@ -1,22 +1,22 @@
 'use strict';
 
-var lab = require('../index');
-var chores = require('../../lib/chores');
-var DevebotApi = lab.getDevebotApi();
-var assert = require('chai').assert;
-var path = require('path');
-var util = require('util');
-var rewire = require('rewire');
-var sinon = require('sinon');
+const lab = require('../index');
+const chores = require('../../lib/chores');
+const ApiClient = lab.getApiClient();
+const assert = require('chai').assert;
+const path = require('path');
+const util = require('util');
+const rewire = require('rewire');
+const sinon = require('sinon');
 
-var noop = function() {}
+const noop = function() {}
 
-describe("tdd:devebot-api:local", function() {
+describe("tdd:framework:api:local", function() {
   this.timeout(lab.getDefaultTimeout());
 
   describe("execCommand()", function() {
-    var api, wsClient, clientStub;
-    var clientMethods = ['on', 'ready', 'send'];
+    let api, wsClient, clientStub;
+    let clientMethods = ['on', 'ready', 'send'];
 
     beforeEach(function() {
       wsClient = lab.createWsClientMock(lab.createWsServerMock());
@@ -24,12 +24,12 @@ describe("tdd:devebot-api:local", function() {
       clientMethods.forEach(function(methodName) {
         clientStub[methodName] = sinon.stub(wsClient, methodName).callThrough();
       });
-      api = new DevebotApi({ listener: wsClient });
+      api = new ApiClient({ listener: wsClient });
     });
 
     it("invoke execCommand() with state 'noop' successfully", function(done) {
       new Promise(function(onResolved, onRejected) {
-        var command = {
+        const command = {
           name: 'example',
           options: {
             expected: 'noop'
@@ -59,7 +59,7 @@ describe("tdd:devebot-api:local", function() {
 
     it("invoke execCommand() with state 'completed' successfully", function(done) {
       new Promise(function(onResolved, onRejected) {
-        var command = {
+        const command = {
           name: 'example',
           options: {
             expected: 'completed',
@@ -83,7 +83,7 @@ describe("tdd:devebot-api:local", function() {
 
     it("invoke execCommand() with state 'failed' successfully", function(done) {
       new Promise(function(onResolved, onRejected) {
-        var command = {
+        const command = {
           name: 'example',
           options: {
             expected: 'failed',
@@ -105,7 +105,7 @@ describe("tdd:devebot-api:local", function() {
 
     it("invoke execCommand() with state 'cancelled' successfully", function(done) {
       new Promise(function(onResolved, onRejected) {
-        var command = {
+        const command = {
           name: 'example',
           options: {
             expected: 'cancelled',
@@ -127,7 +127,7 @@ describe("tdd:devebot-api:local", function() {
 
     it("invoke execCommand() with state 'timeout' successfully", function(done) {
       new Promise(function(onResolved, onRejected) {
-        var command = {
+        const command = {
           name: 'example',
           options: {
             expected: 'timeout',
@@ -149,7 +149,7 @@ describe("tdd:devebot-api:local", function() {
 
     it("invoke loadDefinition() successfully", function(done) {
       new Promise(function(onResolved, onRejected) {
-        var command = {
+        const command = {
           name: 'definition',
           options: {
             expected: 'definition',

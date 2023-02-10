@@ -15,52 +15,52 @@ npm install --save devebot-api
 ### Creates object and defines events
 
 ```javascript
-var DevebotApi = require('devebot-api');
+var ApiClient = require('devebot-api');
 var logger = require('winston');
 
-var devebot = new DevebotApi({
+var apiClient = new ApiClient({
   host: '<your-address-default-127.0.0.1>',
   port: '<your-port-default-17779>',
   path: '<default-devebot>',
   logger: logger // option
 });
 
-devebot.on('started', function() {
+apiClient.on('started', function() {
   logger.info(' - The command is started');
 });
 
-devebot.on('completed', function(data) {
+apiClient.on('completed', function(data) {
   logger.info(' - The command is commpleted successful, result: %s',
       JSON.stringify(data, null, 2));
 });
 
-devebot.on('failed', function(data) {
+apiClient.on('failed', function(data) {
   logger.info(' - The command is failed, output: %s',
       JSON.stringify(data, null, 2));
 });
 
-devebot.on('done', function() {
+apiClient.on('done', function() {
   logger.info(' - The command is finished');
 });
 
-devebot.on('noop', function() {
+apiClient.on('noop', function() {
   logger.info(' - The command not found');
 });
 ```
 
 ### Gets commands definition
 
-Uses `devebot.loadDefinition(callback)` to get the commands defintion from `devebot` service.
+Uses `apiClient.loadDefinition(callback)` to get the commands defintion from `devebot` service.
 
 ```javascript
-devebot.loadDefinition(function(err, definition) {
+apiClient.loadDefinition(function(err, definition) {
   // do something with commands definition
 });
 ```
 
 ### Executes a command
 
-Uses `devebot.execCommand(cmd_definition, callback)` to execute a command that has been defined in `devebot` service.
+Uses `apiClient.execCommand(cmd_definition, callback)` to execute a command that has been defined in `devebot` service.
 
 Example:
 
@@ -77,13 +77,13 @@ var callback = function(err, result) {
   // do something with err & result
 };
 
-devebot.execCommand(cmd_def, callback);
+apiClient.execCommand(cmd_def, callback);
 ```
 
 or inline form:
 
 ```javascript
-devebot.execCommand({
+apiClient.execCommand({
   name: '<name_of_command>',
   options: {
     option_1: '<value_1>',

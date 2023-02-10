@@ -5,8 +5,9 @@ let debug = null;
 let pinbug = function(pkgName) {
   if (debug == null) {
     try {
+      // eslint-disable-next-line
       debug = require('debug');
-    } catch(err) {
+    } catch (err) {
       debug = function() {
         let log = function() {
           return console.log.apply(console, arguments);

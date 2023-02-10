@@ -49,7 +49,7 @@ function Client(params) {
 
       let state = msg.state;
 
-      switch(state) {
+      switch (state) {
         case 'definition':
           result = msg;
           ws.close();

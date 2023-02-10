@@ -14,7 +14,7 @@ function TestLoader() {
     return 3600000;
   }
 
-  this.getDevebotApi = function() {
+  this.getApiClient = function() {
     return require('../index');
   }
 

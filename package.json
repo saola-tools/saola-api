@@ -1,6 +1,6 @@
 {
   "name": "devebot-api",
-  "version": "0.2.2",
+  "version": "0.4.0",
   "description": "Devebot API",
   "main": "index.js",
   "directories": {
@@ -12,12 +12,18 @@
     "lib/"
   ],
   "scripts": {
-    "build": "babel ./src -d ./lib",
     "clean": "rm -rf ./lib",
-    "prepublish": "npm run clean && NODE_ENV=${DEVEBOT_NODE_ENV:-production} npm run build",
-    "pretest": "npm run clean && NODE_ENV=${DEVEBOT_NODE_ENV:-test} npm run build",
-    "test": "mocha --recursive ./test/**/*-test.js",
-    "verify": "npm run prepublish && mocha --recursive ./test/**/*-test.js"
+    "clean-modules": "rm -rf ./node_modules ./package-lock.json ./test/node_modules ./test/package-lock.json",
+    "setup-modules": "npm install --ignore-scripts; npm --prefix=test install --ignore-scripts",
+    "reset-modules": "npm run clean-modules && npm run setup-modules",
+    "build": "npm exec -- babel ./src -d ./lib",
+    "check": "npm exec -- eslint src index.js",
+    "check-silent": "npm exec -- eslint --quiet src index.js",
+    "pretest": "npm run clean && NODE_ENV=${SAOLA_NODE_ENV:-test} npm run build",
+    "testOnly": "npm --prefix=test exec -- mocha --recursive ./test/tdd/*-test.js",
+    "test": "npm run testOnly",
+    "prepublishOnly": "npm run check-silent && npm run clean && NODE_ENV=${DEVEBOT_NODE_ENV:-production} npm run build",
+    "verify": "npm run prepublishOnly && npm run testOnly"
   },
   "repository": {
     "type": "git",
@@ -38,12 +44,19 @@
   },
   "homepage": "https://github.com/devebot/devebot-api#readme",
   "devDependencies": {
-    "babel-cli": "^6.26.0",
-    "babel-plugin-minify-mangle-names": "^0.3.0",
-    "babel-plugin-transform-async-to-module-method": "^6.24.1",
-    "babel-preset-env": "^1.6.1",
-    "debug": "^3.1.0",
-    "mocha": "^4.1.0"
+    "@babel/cli": "^7.19.3",
+    "@babel/core": "^7.20.2",
+    "@babel/preset-env": "^7.20.2",
+    "babel-plugin-minify-mangle-names": "^0.5.1",
+    "cross-env": "^5.2.0",
+    "eslint": "^5.16.0",
+    "eslint-config-promise": "^2.0.2",
+    "eslint-config-standard": "^12.0.0",
+    "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-node": "^7.0.1",
+    "eslint-plugin-promise": "^4.0.1",
+    "eslint-plugin-security": "^1.5.0",
+    "eslint-plugin-standard": "^4.0.0"
   },
   "dependencies": {
     "ws": "^3.3.2"
