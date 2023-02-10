@@ -1,11 +1,11 @@
-'use strict';
+"use strict";
 
-const events = require('events');
-const util = require('util');
-const WebSocket = require('ws');
-const chores = require('./chores');
+const events = require("events");
+const util = require("util");
+const WebSocket = require("ws");
+const chores = require("./chores");
 
-function Client(params) {
+function Client (params) {
   events.EventEmitter.call(this);
 
   params = params || {};
@@ -15,32 +15,32 @@ function Client(params) {
   let stateMap = params.stateMap || chores.STATE_MAP;
   let mapState = function(state) {
     return stateMap[state] || state;
-  }
+  };
   let listener = params.listener || params.ws;
   listener = (listener instanceof events.EventEmitter) ? listener : undefined;
 
   let self = this;
 
   self.loadDefinition = function(callback) {
-    self.execCommand({ name: 'definition', options: [] }, callback);
+    self.execCommand({ name: "definition", options: [] }, callback);
   };
 
   self.execCommand = function(command, callback) {
     let ws = listener ? listener : buildWebsocketClient(config);
-    let wsCommand = chores.pick(command, ['name', 'mode', 'options', 'payload', 'package']);
+    let wsCommand = chores.pick(command, ["name", "mode", "options", "payload", "package"]);
     let result, exception;
 
     // @Deprecated
     wsCommand.command = command.name;
     wsCommand.data = command.data;
 
-    ws.on('open', function open() {
-      logger.debug(' - Websocket@client is opened');
+    ws.on("open", function open () {
+      logger.debug(" - Websocket@client is opened");
       ws.send(JSON.stringify(wsCommand));
     });
 
-    ws.on('message', function incomming(msg) {
-      logger.debug(' - Websocket@client is received a message: %s', msg);
+    ws.on("message", function incomming (msg) {
+      logger.debug(" - Websocket@client is received a message: %s", msg);
 
       msg = JSON.parse(msg);
 
@@ -50,29 +50,29 @@ function Client(params) {
       let state = msg.state;
 
       switch (state) {
-        case 'definition':
+        case "definition":
           result = msg;
           ws.close();
           self.emit(mapState(state), msg);
           break;
-        case 'started':
-        case 'cancelled':
+        case "started":
+        case "cancelled":
           self.emit(mapState(state), msg);
           break;
-        case 'completed':
-        case 'failed':
-        case 'timeout':
+        case "completed":
+        case "failed":
+        case "timeout":
           result = msg;
           self.emit(mapState(state), msg);
           break;
-        case 'done':
+        case "done":
           ws.close();
           self.emit(mapState(state), msg);
           break;
-        case 'noop':
+        case "noop":
           exception = {
-            name: 'IS_NOT_IMPLEMENTED',
-            message: 'operation is not implemented'
+            name: "IS_NOT_IMPLEMENTED",
+            message: "operation is not implemented"
           };
           ws.close();
           self.emit(mapState(state), msg);
@@ -85,19 +85,19 @@ function Client(params) {
       }
     });
 
-    ws.on('close', function handler(code, message) {
-      self.emit(mapState('close'), code, message);
-      logger.debug(' - Websocket@client is closed, code: [%s], message: [%s]', code, message);
+    ws.on("close", function handler (code, message) {
+      self.emit(mapState("close"), code, message);
+      logger.debug(" - Websocket@client is closed, code: [%s], message: [%s]", code, message);
       callback && callback(exception, result);
     });
 
-    ws.on('error', function handler(error) {
-      self.emit(mapState('error'), error);
-      logger.debug(' - Websocket@client encounter an error: %s', error);
+    ws.on("error", function handler (error) {
+      self.emit(mapState("error"), error);
+      logger.debug(" - Websocket@client encounter an error: %s", error);
       callback && callback(error);
     });
 
-    (typeof(ws.ready) === 'function') && ws.ready();
+    (typeof(ws.ready) === "function") && ws.ready();
   };
 }
 
@@ -108,9 +108,9 @@ module.exports = Client;
 const extractConnectionOpts = function(params) {
   params = params || {};
   return chores.pick(params.connection || params, [
-    'url', 'host', 'port', 'path', 'authen', 'tunnel'
+    "url", "host", "port", "path", "authen", "tunnel"
   ]);
-}
+};
 
 const buildWebsocketClient = function(config) {
   let wsOpts = {};
@@ -131,8 +131,8 @@ const buildWebsocketClient = function(config) {
     wsOpts.rejectUnauthorized = config.tunnel.rejectUnauthorized || false;
   }
 
-  let wsUrl = util.format('%s://%s:%s%s/execute',
-    sslEnabled?'wss':'ws', config.host, config.port, config.path);
+  let wsUrl = util.format("%s://%s:%s%s/execute",
+    sslEnabled?"wss":"ws", config.host, config.port, config.path);
 
   return new WebSocket(wsUrl, null, wsOpts);
 };

@@ -1,9 +1,9 @@
-'use strict';
+"use strict";
 
-const pinbug = require('./pinbug');
+const pinbug = require("./pinbug");
 
-const pinbugScope = 'framework:api:';
-const loggingLevels = ['trace', 'debug', 'info', 'warn', 'error', 'fatal'];
+const pinbugScope = "framework:api:";
+const loggingLevels = ["trace", "debug", "info", "warn", "error", "fatal"];
 
 const pinbugWrapper = {};
 loggingLevels.forEach(function(level) {
@@ -14,7 +14,7 @@ const defaultLogger = {};
 loggingLevels.forEach(function(level) {
   defaultLogger[level] = function() {
     pinbugWrapper[level].enabled && pinbugWrapper[level].apply(null, arguments);
-  }
+  };
 });
 
 const STATE_MAP = {
@@ -25,33 +25,33 @@ const STATE_MAP = {
   "complete": "success",
   "done": "done",
   "noop": "noop"
-}
+};
 
-function Chores() {
+function Chores () {
   this.isArray = function(a) {
     return a instanceof Array;
-  }
+  };
 
   this.isString = function(s) {
-    return typeof(s) === 'string';
-  }
+    return typeof(s) === "string";
+  };
 
   this.isFunction = function(f) {
-    return typeof f === 'function';
-  }
+    return typeof f === "function";
+  };
 
   this.isObject = function(o) {
-    return o && typeof o === 'object';
-  }
+    return o && typeof o === "object";
+  };
 
   this.ary = function(func, n) {
     if (n == undefined || n < 0) return func;
     if (this.isFunction(func) && n >= 0) {
       return function() {
         func.apply(null, Array.prototype.slice.call(arguments, 0, n));
-      }
+      };
     }
-  }
+  };
 
   this.omit = function(source, fieldNames) {
     let target = {};
@@ -60,10 +60,10 @@ function Chores() {
         if (fieldNames.indexOf(fieldName) < 0) {
           target[fieldName] = source[fieldName];
         }
-      })
+      });
     }
     return target;
-  }
+  };
 
   this.pick = function(source, fieldNames) {
     let target = {};
@@ -75,11 +75,11 @@ function Chores() {
       });
     }
     return target;
-  }
+  };
 
   this.getDefaultLogger = function() {
     return defaultLogger;
-  }
+  };
 
   this.STATE_MAP = STATE_MAP;
 }
