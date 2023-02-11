@@ -1,7 +1,7 @@
 {
   "name": "@saola/api",
-  "version": "0.4.0",
-  "description": "SaolaJS API",
+  "version": "0.4.1",
+  "description": "Saola API",
   "main": "index.js",
   "directories": {
     "lib": "lib/"
@@ -27,22 +27,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/saolajs/saola-api.git"
+    "url": "git+https://github.com/saola-tools/saola-api.git"
   },
   "keywords": [
     "saola",
-    "api"
+    "saola-api"
   ],
-  "author": {
-    "name": "SaolaJS",
-    "email": "contact@saolajs.com",
-    "url": "https://github.com/saolajs"
-  },
+  "author": "Saola Development Team",
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/saolajs/saola-api/issues"
-  },
-  "homepage": "https://github.com/saolajs/saola-api#readme",
   "devDependencies": {
     "@babel/cli": "^7.19.3",
     "@babel/core": "^7.20.2",
@@ -59,6 +51,6 @@
     "eslint-plugin-standard": "^4.0.0"
   },
   "dependencies": {
-    "ws": "^3.3.3"
+    "ws": "3.3.3"
   }
 }
