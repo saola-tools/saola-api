@@ -2,7 +2,7 @@
 
 let debug = null;
 
-let pinbug = function(pkgName) {
+function pinbug (pkgName) {
   if (debug == null) {
     try {
       // eslint-disable-next-line
@@ -18,6 +18,6 @@ let pinbug = function(pkgName) {
     }
   }
   return debug(pkgName);
-};
+}
 
 module.exports = pinbug;

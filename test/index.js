@@ -1,13 +1,13 @@
 'use strict';
 
-var rewire = require('rewire');
-var Runner = rewire('@saola/core/lib/runner');
-var WsServerMock = Runner.__get__("WsServerMock");
-var WsClientMock = Runner.__get__("WsClientMock");
-var WebSocket = require('ws');
-var assert = require('chai').assert;
-var util = require('util');
-var chores = require('../lib/chores');
+const rewire = require('rewire');
+const Runner = rewire('@saola/core/lib/runner');
+const WsServerMock = Runner.__get__("WsServerMock");
+const WsClientMock = Runner.__get__("WsClientMock");
+const WebSocket = require('ws');
+const assert = require('chai').assert;
+const util = require('util');
+const chores = require('../lib/chores');
 
 function TestLoader() {
   this.getDefaultTimeout = function() {
@@ -23,11 +23,11 @@ function TestLoader() {
   }
 
   this.createWsClientMock = function(wsServer) {
-    var wsClient = new WsClientMock(wsServer);
+    const wsClient = new WsClientMock(wsServer);
     wsServer.on('message', function(command) {
       command = JSON.parse(command);
-      var options = command.options || {};
-      var result = options.expectedData || {};
+      const options = command.options || {};
+      const result = options.expectedData || {};
       switch(command.name) {
         case 'definition': {
           wsClient.emit('message', JSON.stringify({

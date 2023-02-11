@@ -5,21 +5,19 @@ const util = require("util");
 const WebSocket = require("ws");
 const chores = require("./chores");
 
-function Client (params) {
+function Client (params = {}) {
   events.EventEmitter.call(this);
 
-  params = params || {};
-
-  let config = extractConnectionOpts(params);
-  let logger = params.logger || chores.getDefaultLogger();
-  let stateMap = params.stateMap || chores.STATE_MAP;
-  let mapState = function(state) {
+  const config = extractConnectionOpts(params);
+  const logger = params.logger || chores.getDefaultLogger();
+  const stateMap = params.stateMap || chores.STATE_MAP;
+  const mapState = function(state) {
     return stateMap[state] || state;
   };
   let listener = params.listener || params.ws;
   listener = (listener instanceof events.EventEmitter) ? listener : undefined;
 
-  let self = this;
+  const self = this;
 
   self.loadDefinition = function(callback) {
     self.execCommand({ name: "definition", options: [] }, callback);
@@ -105,15 +103,14 @@ util.inherits(Client, events.EventEmitter);
 
 module.exports = Client;
 
-const extractConnectionOpts = function(params) {
-  params = params || {};
+const extractConnectionOpts = function(params = {}) {
   return chores.pick(params.connection || params, [
     "url", "host", "port", "path", "authen", "tunnel"
   ]);
 };
 
 const buildWebsocketClient = function(config) {
-  let wsOpts = {};
+  const wsOpts = {};
 
   if (config.authen instanceof Object) {
     wsOpts.headers = wsOpts.headers || {};
@@ -126,12 +123,12 @@ const buildWebsocketClient = function(config) {
     }
   }
 
-  let sslEnabled = (config.tunnel instanceof Object && config.tunnel.enabled);
+  const sslEnabled = (config.tunnel instanceof Object && config.tunnel.enabled);
   if (sslEnabled) {
     wsOpts.rejectUnauthorized = config.tunnel.rejectUnauthorized || false;
   }
 
-  let wsUrl = util.format("%s://%s:%s%s/execute",
+  const wsUrl = util.format("%s://%s:%s%s/execute",
     sslEnabled?"wss":"ws", config.host, config.port, config.path);
 
   return new WebSocket(wsUrl, null, wsOpts);
